@@ -110,8 +110,13 @@ test-certvalidator: $(NEEDS_VENV)
 test-gnutls:
 	$(MAKE) run ARGS="harness --output ./results/gnutls.json -- ./$(VENV_BIN)/python ./harness/gnutls/test-gnutls"
 
+.PHONY: test-aws-lc
+test-aws-lc:
+	$(MAKE) -C harness/aws-lc build-image
+	$(MAKE) run ARGS="harness --output ./results/aws-lc.json -- docker run --platform linux/amd64 --rm -i x509-limbo-aws-lc"
+
 .PHONY: test
-test: test-go test-openssl test-rust-webpki test-rustls-webpki test-pyca-cryptography test-certvalidator test-gnutls
+test: test-go test-openssl test-rust-webpki test-rustls-webpki test-pyca-cryptography test-certvalidator test-gnutls test-aws-lc
 
 .PHONY: site
 site: $(NEEDS_VENV)
